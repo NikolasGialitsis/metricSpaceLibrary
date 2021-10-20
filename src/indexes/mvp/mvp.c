@@ -52,7 +52,7 @@ static vpnode buildvpt (vpt *tree, Tod *od, int nobjs)
           od[j] = od[--nobjs];
 	  for (i=0;i<nobjs;i++) 
 	      od[i].dist = distance (node.u.interno.query, od[i].obj);
-          qsort (od,nobjs,sizeof(Tod),compar);
+         qsort (od,nobjs,sizeof(Tod),compar);
 	  prev = 0; per = 0;
 	  for (i=0;i<tree->arity;i++)
 	      { child(&node,i).dist = prev;

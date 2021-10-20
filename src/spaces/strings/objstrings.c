@@ -28,7 +28,6 @@ static int ed (char *p1, char *p2)
 
     { 
 	    
-      printf("attempt to create NGramGraph\n"); 
       register int pc,nc,j,i; 
       register char cc; 
       register int m = strlen(p1);
@@ -60,7 +59,8 @@ static int ed (char *p1, char *p2)
 
 Tdist distanceInter (Obj obj1, Obj obj2)
 
-{ return valueDissimilarity(db(obj1),db(obj2));
+{ 
+  return valueDissimilarity(db(obj1),db(obj2));
 }
 
 

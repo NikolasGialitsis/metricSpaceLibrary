@@ -29,6 +29,7 @@ typedef struct t_dDB
 static int never = 1;
 static dDB DB;
 
+
 int openDB (char *name)
 
 {   DIR *dptr;
