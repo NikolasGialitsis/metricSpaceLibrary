@@ -101,15 +101,15 @@ int openDB (char *name)
 	{ while (*ptr != '\n') ptr++;
 	  dn++; *ptr++ = 0;
 	}
-     dn = 10;
+     //  dn = 10;
      DB.ptrs = malloc ((dn+1)*sizeof(char*));
      dn = 0; ptr = DB.pals;
      DB.ptrs[0] = NULL;
      while (ptr < top) 
 	{
-      if(dn == 10){
-        break;
-      }
+      // if(dn == 10){
+      //   break;
+      // }
      DB.ptrs[++dn] = ptr;
 	  while (*ptr++);
         }
