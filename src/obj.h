@@ -24,7 +24,7 @@ void closeDB (void);
 #ifdef CONT
 float distanceInter (Obj o1, Obj o2);
 #else
-int distanceInter (Obj o1, Obj o2);
+double distanceInter (Obj o1, Obj o2);
 #endif
 
       /* exported, computes distance and does the accounting */

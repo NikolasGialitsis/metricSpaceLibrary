@@ -60,7 +60,9 @@ static int ed (char *p1, char *p2)
 Tdist distanceInter (Obj obj1, Obj obj2)
 
 { 
-  return valueDissimilarity(db(obj1),db(obj2));
+  Tdist dist =  ngg_dissimilarity(obj1,obj2);
+  printf("Dist(%d,%d) : %.5f\n",(int) obj1, (int)obj2, dist);
+  return dist;
 }
 
 
@@ -99,14 +101,22 @@ int openDB (char *name)
 	{ while (*ptr != '\n') ptr++;
 	  dn++; *ptr++ = 0;
 	}
+     dn = 10;
      DB.ptrs = malloc ((dn+1)*sizeof(char*));
      dn = 0; ptr = DB.pals;
      DB.ptrs[0] = NULL;
      while (ptr < top) 
-	{ DB.ptrs[++dn] = ptr;
+	{
+      if(dn == 10){
+        break;
+      }
+     DB.ptrs[++dn] = ptr;
 	  while (*ptr++);
         }
      DB.npals = dn;
+     printf("DB.npals %d\n",DB.npals);
+     ngg_construct_graph_database(DB.ptrs, DB.npals);
+     printf("constructed graph database\n");
      return DB.npals;
    }
 

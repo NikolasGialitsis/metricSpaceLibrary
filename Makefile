@@ -152,10 +152,8 @@ lib/indexC-dyn-sat.o: src/indexes/dynamic/sat/dyn-sat.c
 ######
 
 # SPACES
-lib/space-strings.o: src/spaces/strings/objstrings.c  $(C_WRAPPER_FOLDER)/libC_Interface.so  $(C_WRAPPER_FOLDER)/C_HandleGraphRequest.h $(C_WRAPPER_FOLDER)/libStringSplitter.so $(C_WRAPPER_FOLDER)/libProximityApproach.so $(C_WRAPPER_FOLDER)/libNGramGraph.so $(C_WRAPPER_FOLDER)/libGraphSimilarity.so
-	 $(C) $(DFLAGS) -c -o lib/space-strings.o src/spaces/strings/objstrings.c  -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity
-
-
+lib/space-strings.o: src/spaces/strings/objstrings.c $(C_WRAPPER_FOLDER)/Request.c $(C_WRAPPER_FOLDER)/libC_Interface.so  $(C_WRAPPER_FOLDER)/C_HandleGraphRequest.h $(C_WRAPPER_FOLDER)/libStringSplitter.so $(C_WRAPPER_FOLDER)/libProximityApproach.so $(C_WRAPPER_FOLDER)/libNGramGraph.so $(C_WRAPPER_FOLDER)/libGraphSimilarity.so
+	 $(C) $(CFLAGS) -c -o lib/space-strings.o src/spaces/strings/objstrings.c  -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity
 
 lib/space-vectors.o: src/spaces/vectors/objvector.c
 	 $(C) $(CFLAGS) -c -o lib/space-vectors.o src/spaces/vectors/objvector.c 
@@ -198,8 +196,8 @@ bin/build-fqt-strings: lib/basicsD.o lib/bucketD.o lib/indexD-fqt.o lib/space-st
 bin/query-fqt-strings: lib/basicsD.o lib/bucketD.o lib/indexD-fqt.o lib/space-strings.o lib/queryD.o $(C_WRAPPER_FOLDER)/libC_Interface.so  $(C_WRAPPER_FOLDER)/C_HandleGraphRequest.h $(C_WRAPPER_FOLDER)/libStringSplitter.so $(C_WRAPPER_FOLDER)/libProximityApproach.so $(C_WRAPPER_FOLDER)/libNGramGraph.so $(C_WRAPPER_FOLDER)/libGraphSimilarity.so
 	$(C) $(DFLAGS) -o bin/query-fqt-strings lib/queryD.o  lib/basicsD.o lib/bucketD.o lib/indexD-fqt.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 
 
-bin/build-mvp-strings: lib/basicsD.o lib/bucketD.o lib/indexD-mvp.o lib/space-strings.o lib/buildD.o $(C_WRAPPER_FOLDER)/libC_Interface.so  $(C_WRAPPER_FOLDER)/C_HandleGraphRequest.h $(C_WRAPPER_FOLDER)/libStringSplitter.so $(C_WRAPPER_FOLDER)/libProximityApproach.so $(C_WRAPPER_FOLDER)/libNGramGraph.so $(C_WRAPPER_FOLDER)/libGraphSimilarity.so
-	$(C) $(DFLAGS) -o bin/build-mvp-strings lib/buildD.o  lib/basicsD.o lib/bucketD.o lib/indexD-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 
+bin/build-mvp-strings: lib/basicsD.o lib/bucketD.o lib/indexD-mvp.o lib/space-strings.o lib/buildD.o $(C_WRAPPER_FOLDER)/libC_Interface.so  $(C_WRAPPER_FOLDER)/C_HandleGraphRequest.h $(C_WRAPPER_FOLDER)/libStringSplitter.so $(C_WRAPPER_FOLDER)/libProximityApproach.so $(C_WRAPPER_FOLDER)/Request.c $(C_WRAPPER_FOLDER)/libC_Interface.so  $(C_WRAPPER_FOLDER)/C_HandleGraphRequest.h $(C_WRAPPER_FOLDER)/libStringSplitter.so $(C_WRAPPER_FOLDER)/libProximityApproach.so $(C_WRAPPER_FOLDER)/libNGramGraph.so $(C_WRAPPER_FOLDER)/libGraphSimilarity.so
+	$(C) $(DFLAGS) -o bin/build-mvp-strings lib/buildD.o  lib/basicsD.o lib/bucketD.o lib/indexD-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity 	-L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 
 
 bin/query-mvp-strings: lib/basicsD.o lib/bucketD.o lib/indexD-mvp.o lib/space-strings.o lib/queryD.o $(C_WRAPPER_FOLDER)/libC_Interface.so  $(C_WRAPPER_FOLDER)/C_HandleGraphRequest.h $(C_WRAPPER_FOLDER)/libStringSplitter.so $(C_WRAPPER_FOLDER)/libProximityApproach.so $(C_WRAPPER_FOLDER)/libNGramGraph.so $(C_WRAPPER_FOLDER)/libGraphSimilarity.so
 	$(C) $(DFLAGS) -o bin/query-mvp-strings lib/queryD.o  lib/basicsD.o lib/bucketD.o lib/indexD-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 
