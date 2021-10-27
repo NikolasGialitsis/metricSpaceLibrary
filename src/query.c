@@ -67,7 +67,7 @@ int main (int argc, char **argv)
 #ifdef CONT
                fprintf (stderr,"kNNs at distance %f\n",r);
 #else
-               fprintf (stderr,"kNNs at distance %i\n",r);
+               fprintf (stderr,"kNNs at distance %f\n",r);
 #endif
 	     }
 	}

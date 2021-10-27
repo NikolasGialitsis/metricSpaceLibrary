@@ -57,9 +57,7 @@ static int ed (char *p1, char *p2)
 //    { return ed (db(obj1),db(obj2));
 //    }
 
-Tdist distanceInter (Obj obj1, Obj obj2)
-
-{ 
+Tdist distanceInter (Obj obj1, Obj obj2){
   Tdist dist =  ngg_dissimilarity(obj1,obj2);
   printf("Dist(%d,%d) : %.5f\n\n",(int) obj1, (int)obj2, dist);
   return dist;
@@ -67,10 +65,10 @@ Tdist distanceInter (Obj obj1, Obj obj2)
 
 
 Obj parseobj (char *s)
-
    { 
      char *str = db(NewObj);
      if (str != NULL) free(str);
+     ngg_construct(NewObj, s);
      str = malloc (strlen(s)+1);
      strcpy (str,s);
      db(NewObj) = str;
