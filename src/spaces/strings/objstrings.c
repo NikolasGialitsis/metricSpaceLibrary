@@ -67,7 +67,10 @@ Tdist distanceInter (Obj obj1, Obj obj2){
 Obj parseobj (char *s)
    { 
      char *str = db(NewObj);
-     if (str != NULL) free(str);
+     if (str != NULL){
+       printf("emptying string %s\n",str);
+       free(str);
+     }
      ngg_construct(NewObj, s);
      str = malloc (strlen(s)+1);
      strcpy (str,s);
@@ -93,17 +96,17 @@ int openDB (char *name)
      DB.pals = malloc (sdata.st_size);
      fread (DB.pals,sdata.st_size,1,f);
      fclose (f);
-     ptr = DB.pals; top = ptr + sdata.st_size;
+     ptr = DB.pals; top = ptr + sdata.st_size; 
      dn = 0;
-     while (ptr < top) 
+     while (ptr < top) //count newlines (num of input sequences)
 	{ while (*ptr != '\n') ptr++;
-	  dn++; *ptr++ = 0;
+	  dn++; *ptr++ = 0;//change newline to string termination character
 	}
-    
-     DB.ptrs = malloc ((dn+1)*sizeof(char*));
-     dn = 0; ptr = DB.pals;
-     DB.ptrs[0] = NULL;
-     while (ptr < top) 
+      
+     DB.ptrs = malloc ((dn+1)*sizeof(char*)); //storage for one additional ptr in DB
+     dn = 0; ptr = DB.pals; 
+     DB.ptrs[0] = NULL; //notice: skip extra ptr
+     while (ptr < top)//Add ptrs to start of sequences to DB 
 	{ DB.ptrs[++dn] = ptr;
 	  while (*ptr++);
         }
