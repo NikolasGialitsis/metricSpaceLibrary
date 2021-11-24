@@ -67,7 +67,10 @@ static vpnode buildvpt (vpt *tree, Tod *od, int nobjs)
                      if (i >= tree->arity - (nobjs % tree->arity)) per++;
 		     ptr = per;
 		     prev = od[per].dist;
-		     while ((ptr>=pptr) && (od[ptr].dist == prev)) ptr--;
+		     int iters = 0;
+           while ((ptr>=pptr) && (od[ptr].dist == prev)){
+            ptr--;
+           } 
 		   }
 		else ptr = nobjs-1;
 		child(&node,i).child = buildvpt (tree,od+pptr,ptr-pptr+1);
@@ -232,6 +235,7 @@ static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
 	{ int i,ci,d;
           Tdist dist;
 	  bool ea,eb;
+     
 	  dist = distance (obj, node->u.interno.query); 
           addCelem (res,node->u.interno.query,dist);
           for (ci=0;ci<arity;ci++)

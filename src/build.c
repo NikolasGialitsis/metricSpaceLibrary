@@ -26,6 +26,7 @@ int main (int argc, char **argv)
      if (!np || (np > n)) np = n;
      argc -= 4; argv += 4;
 
+
      printf ("indexing %li objects out of %li...\n",np,n);
      times (&t1);
      numDistances = 0;
