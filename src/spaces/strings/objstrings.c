@@ -23,43 +23,17 @@ static PalDB DB;
 	/* edit distance */
 
 
-
-
-static int ed (char *p1, char *p2)
-
-    { 
-	    
-      register int pc,nc,j,i; 
-      register char cc; 
-      register int m = strlen(p1);
-      int *c;
-      if (DB.csize < m) 
-	 { DB.csize = m; 
-	   DB.c = realloc (DB.c,(m+1)*sizeof(int)); 
-	 }
-      c = DB.c;
-      nc = m;
-      p1--;
-      for (j=0;j<=m;j++) c[j] = j;
-      for (i=0;(cc=p2[i]);i++)
-        { pc = i; nc = i+1; 
-          for (j=1;j<=m;j++) 
-            { if (c[j] < nc) nc = c[j];
-              pc += (cc != p1[j]);
-              if (pc <= nc) nc = pc; else nc++; 
-              pc = c[j]; c[j] = nc; 
-            } 
-        } 
-      return nc;
-    }
-
 // Tdist distanceInter (Obj obj1, Obj obj2)
 
 //    { return ed (db(obj1),db(obj2));
 //    }
 
 Tdist distanceInter (Obj obj1, Obj obj2){
-  Tdist dist =  ngg_dissimilarity(obj1,obj2);
+  
+  // Tdist dist = get_precomputed_distance_if_exists(obj1, obj2);
+  // if(dist >= 0) return dist;
+  
+  Tdist dist = ngg_dissimilarity(db(obj1),db(obj2));
   printf("Dist(%d,%d) : %.5f\n\n",(int) obj1, (int)obj2, dist);
   return dist;
 }
@@ -138,7 +112,6 @@ int openDB (char *name)
       t = clock() - t;
       double time_taken = ((double)t)/CLOCKS_PER_SEC;
       printf("cereal took %f seconds to deserialize distance matrix\n", time_taken);
-      exit(0);
     }
     return DB.npals;
    }
