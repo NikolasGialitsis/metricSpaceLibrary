@@ -54,9 +54,3 @@ bin/build-mvp-strings: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-st
 
 bin/query-mvp-strings: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o lib/queryC.o
 	$(C) $(CFLAGS) -o bin/query-mvp-strings lib/queryC.o  lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 
-
-bin/build-mvp-documents: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-documents.o lib/buildC.o 
-	$(C) $(CFLAGS) -o bin/build-mvp-documents lib/buildC.o  lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-documents.o -lm
-
-bin/query-mvp-documents: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-documents.o lib/queryC.o 
-	$(C) $(CFLAGS) -o bin/query-mvp-documents lib/queryC.o  lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-documents.o -lm

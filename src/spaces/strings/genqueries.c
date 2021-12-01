@@ -114,7 +114,7 @@ int main (int argc, char **argv)
     int pert;
     char *kk;
     struct timeval t;
-
+  
     if (argc < 6)
 	{ fprintf (stderr,"Usage: genqueries <db file> <from> <nqueries> "
 			    "<k> <perturb>\n  See the manual for details.\n");

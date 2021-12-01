@@ -6,6 +6,7 @@
 #include <string.h>
 #include "/home/ngialitsis/search/NGramGraphParallel/c_wrapper/C_Interface.h"
 #include <time.h>
+#include <unistd.h>
 
 typedef struct sPalDB
    { char *pals;  /* words all together */
@@ -20,21 +21,12 @@ static PalDB DB;
 
 #define db(p) (DB.ptrs[(int)p])
 
-	/* edit distance */
-
-
-// Tdist distanceInter (Obj obj1, Obj obj2)
-
-//    { return ed (db(obj1),db(obj2));
-//    }
-
 Tdist distanceInter (Obj obj1, Obj obj2){
-  
-  // Tdist dist = get_precomputed_distance_if_exists(obj1, obj2);
-  // if(dist >= 0) return dist;
-  
-  Tdist dist = ngg_dissimilarity(db(obj1),db(obj2));
-  printf("Dist(%d,%d) : %.5f\n\n",(int) obj1, (int)obj2, dist);
+  Tdist dist = get_precomputed_distance_if_exists(obj1, obj2);
+  if(dist >= 0) return dist;
+  ngg_construct(1, db(obj2));
+  dist = ngg_dissimilarity(0,1);
+  uncache_graphs(1,1);
   return dist;
 }
 
@@ -46,10 +38,12 @@ Obj parseobj (char *s)
        printf("emptying string %s\n",str);
        free(str);
      }
+    
      ngg_construct(NewObj, s);
      str = malloc (strlen(s)+1);
      strcpy (str,s);
      db(NewObj) = str;
+     printf("parsed %s\n\n",db(NewObj));
      return NewObj; 
    }
 
@@ -86,32 +80,29 @@ int openDB (char *name)
         }
      DB.npals = dn;
 
-
-    if(false){//TODO: replace with actual condition
-      
+    
+    if(access( objects_storage_file, R_OK ) == 0) {
       time_t t;
       t = clock();
-      int skip_ahead = 0;
-      printf("DB.npals %d\n",DB.npals-skip_ahead);
-      DistMat* DM = ngg_compute_distance_matrix(DB.ptrs+skip_ahead+1,DB.npals-skip_ahead);//+1 to skip null entry(used internally as space to store query)
+      decerialize(objects_storage_file);
       t = clock() - t;
-      double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
+      double time_taken = ((double)t)/CLOCKS_PER_SEC;
+      printf("cereal took %f seconds to deserialize distance matrix\n", time_taken);    
+    } else {
+      printf("could not find objects file %s\n",objects_storage_file);    
+      exit(0);
+      time_t t;
+      t = clock();
+      printf("DB.npals %d\n",DB.npals);
+      DistMat* DM = ngg_compute_distance_matrix(DB.ptrs+1,DB.npals);
+      t = clock() - t;
+      double time_taken = ((double)t)/CLOCKS_PER_SEC; 
       printf("distance matrix took %f seconds to build \n", time_taken);
-      cerealize(DM);
+      cerealize(DM, objects_storage_file);
 
       t = clock() - t;
       time_taken = ((double)t)/CLOCKS_PER_SEC;
-      printf("cereal took %f seconds to serialize distance matrix\n", time_taken);
-      exit(0);
-     
-    }
-    else{
-      time_t t;
-      t = clock();
-      decerialize("dmat.bin");
-      t = clock() - t;
-      double time_taken = ((double)t)/CLOCKS_PER_SEC;
-      printf("cereal took %f seconds to deserialize distance matrix\n", time_taken);
+      printf("cereal took %f seconds to serialize distance matrix\n", time_taken);  
     }
     return DB.npals;
    }
