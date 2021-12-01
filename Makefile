@@ -10,34 +10,24 @@ clean:
 	
 FLAGS = -O9 -Wall
 CFLAGS = $(FLAGS) -DCONT -ggdb
-DFLAGS = $(FLAGS) -DDISCR -ggdb
 
 # Common files
 
-lib/basicsD.o: src/basics.c
-	 $(C) $(DFLAGS) -c -o lib/basicsD.o  src/basics.c
+
 lib/basicsC.o: src/basics.c
 	 $(C) $(CFLAGS) -c -o lib/basicsC.o  src/basics.c
 
-lib/bucketD.o: src/bucket.c
-	 $(C) $(DFLAGS) -c -o lib/bucketD.o  src/bucket.c
 lib/bucketC.o: src/bucket.c
 	 $(C) $(CFLAGS) -c -o lib/bucketC.o  src/bucket.c
 
-lib/buildD.o: src/build.c
-	 $(C) $(DFLAGS) -c -o lib/buildD.o src/build.c
 lib/buildC.o: src/build.c
 	 $(C) $(CFLAGS) -c -o lib/buildC.o src/build.c
 
-lib/queryD.o: src/query.c
-	 $(C) $(DFLAGS) -c -o lib/queryD.o src/query.c
 lib/queryC.o: src/query.c
 	 $(C) $(CFLAGS) -c -o lib/queryC.o src/query.c
 	 
 # INDEXES
 
-lib/indexD-mvp.o: src/indexes/mvp/mvp.c
-	 $(C) $(DFLAGS) -c -o lib/indexD-mvp.o src/indexes/mvp/mvp.c
 lib/indexC-mvp.o: src/indexes/mvp/mvp.c
 	 $(C) $(CFLAGS) -c -o lib/indexC-mvp.o src/indexes/mvp/mvp.c
 

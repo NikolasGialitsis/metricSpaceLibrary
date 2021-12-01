@@ -26,6 +26,7 @@ Tdist distanceInter (Obj obj1, Obj obj2){
   if(dist >= 0) return dist;
   ngg_construct(1, db(obj2));
   dist = ngg_dissimilarity(0,1);
+  printf("D(%.100s,%.100s)=%f\n",db(obj1),db(obj2),dist);
   uncache_graphs(1,1);
   return dist;
 }

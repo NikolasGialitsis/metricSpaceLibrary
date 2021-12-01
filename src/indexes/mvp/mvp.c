@@ -236,8 +236,11 @@ static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
           Tdist dist;
 	  bool ea,eb;
      
-	  dist = distance (obj, node->u.interno.query); 
-          addCelem (res,node->u.interno.query,dist);
+   
+     dist = distance (obj, node->u.interno.query); 
+     
+     printf("D(%d,%d)=%f\n",obj,node->u.interno.query,dist);
+     addCelem (res,node->u.interno.query,dist);
           for (ci=0;ci<arity;ci++)
              if (child(node,ci).dist > dist) break;
           ci--; ea = eb = false;
@@ -271,6 +274,7 @@ Tdist searchNN (Index S, Obj obj, int k, bool show)
      _searchNN (&tree->node,obj,&res,tree->arity);
      if (show) showCelem (&res);
      mdif = radCelem(&res);
+     printf("mdif %f\n",mdif);
      freeCelem (&res);
      return mdif;
    }

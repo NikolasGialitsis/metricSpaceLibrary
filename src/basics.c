@@ -16,7 +16,11 @@ Tcelem createCelem (int k)
 
 void addCelem (Tcelem *celems, Obj id, Tdist dist)
 
-   { int i,pos = celems->csize,pos2;
+   { 
+
+     printf("adding celem of distance %.5f to id:%d \n",dist, id);
+     printf("radius = %.5f\n",radCelem(celems));
+     int i,pos = celems->csize,pos2;
      while ((pos>0) && (celems->elems[pos-1].dist > dist)) pos--;
      if (pos == celems->k) return;  /* no entra entre los elegidos */
      pos2=pos;

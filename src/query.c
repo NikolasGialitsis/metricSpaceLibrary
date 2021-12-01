@@ -72,7 +72,7 @@ int main (int argc, char **argv)
 	     }
 	}
      fprintf(stderr,"Total distances per query: %f\n",
-		numDistances/(float)numQueries);
+     numDistances/(float)numQueries);
      fprintf (stderr,"freeing...\n");
      freeIndex (S,true);
      fprintf (stderr,"done\n");
