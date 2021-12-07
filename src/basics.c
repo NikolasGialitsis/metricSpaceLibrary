@@ -18,11 +18,12 @@ void addCelem (Tcelem *celems, Obj id, Tdist dist)
 
    { 
 
-     printf("adding celem of distance %.5f to id:%d \n",dist, id);
-     printf("radius = %.5f\n",radCelem(celems));
+    
      int i,pos = celems->csize,pos2;
-     while ((pos>0) && (celems->elems[pos-1].dist > dist)) pos--;
+     while ((pos>0) && (celems->elems[pos-1].dist > dist)) pos--;//ranking
      if (pos == celems->k) return;  /* no entra entre los elegidos */
+   //   printf("\tadding celem of distance %.5f to id:%d \n",dist, id);
+    
      pos2=pos;
      while ((pos2>0) && (celems->elems[pos2-1].dist == dist)) 
 	   { if (id == celems->elems[pos2].id) return; /* repetido */
@@ -31,6 +32,7 @@ void addCelem (Tcelem *celems, Obj id, Tdist dist)
      if (celems->csize < celems->k) celems->csize++;
      for (i=celems->csize-1;i>pos;i--) celems->elems[i] = celems->elems[i-1];
      celems->elems[pos].id = id; celems->elems[pos].dist = dist;
+   //   printf("\tradius = %.5f\n",radCelem(celems));
    }
 
 bool outCelem (Tcelem *celems, Tdist dist)

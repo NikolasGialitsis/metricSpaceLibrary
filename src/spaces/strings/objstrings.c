@@ -22,11 +22,15 @@ static PalDB DB;
 #define db(p) (DB.ptrs[(int)p])
 
 Tdist distanceInter (Obj obj1, Obj obj2){
+  if(obj2 == 0) {
+    numDistances--;
+    return 1;
+  }
   Tdist dist = get_precomputed_distance_if_exists(obj1, obj2);
   if(dist >= 0) return dist;
   ngg_construct(1, db(obj2));
   dist = ngg_dissimilarity(0,1);
-  printf("D(%.100s,%.100s)=%f\n",db(obj1),db(obj2),dist);
+  // printf("\n\nD(%.100s,%.100s)=%f\n",db(obj1),db(obj2),dist);
   uncache_graphs(1,1);
   return dist;
 }
@@ -36,7 +40,7 @@ Obj parseobj (char *s)
    { 
      char *str = db(NewObj);
      if (str != NULL){
-       printf("emptying string %s\n",str);
+      //  printf("emptying string %s\n",str);
        free(str);
      }
     
@@ -44,7 +48,7 @@ Obj parseobj (char *s)
      str = malloc (strlen(s)+1);
      strcpy (str,s);
      db(NewObj) = str;
-     printf("parsed %s\n\n",db(NewObj));
+    //  printf("parsed %s\n\n",db(NewObj));
      return NewObj; 
    }
 
@@ -107,6 +111,11 @@ int openDB (char *name)
     }
     return DB.npals;
    }
+
+char** getQueriesFromDB()
+{
+    return DB.ptrs;
+}
 
 void closeDB (void)
 

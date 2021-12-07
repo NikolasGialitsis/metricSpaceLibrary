@@ -1,6 +1,8 @@
 
 #include "obj.h"
 
+
+
 typedef void *Index;
 
 /* creates and returns a structure for the first n elements of 

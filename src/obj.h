@@ -17,6 +17,11 @@ typedef int Obj;	/* object id */
 	   another one already open, it will be closed first */
 int openDB (char *name);
 
+/*todo: add documentation
+*/
+char** getQueriesFromDB ();
+
+
 	/* frees the currently open DB, if any */
 void closeDB (void);
 

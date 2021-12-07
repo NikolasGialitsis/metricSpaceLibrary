@@ -67,6 +67,47 @@ int openDB (char *name)
     return DB.n;
 }
 
+
+
+int openDB (char *name)
+
+{   DIR *dptr;
+    struct dirent *dnt;
+    uint size,np;
+    char *tbuf;
+
+    DB.dirname = malloc (strlen(name)+1);
+    strcpy (DB.dirname,name);
+    DB.n = 0;    
+    
+    if (!(dptr=opendir(name)))
+       { fprintf (stderr,"Error: directory %s not found\n",name); exit(-1); }
+    
+    size = 0; np = 0;
+
+    while(dnt=readdir(dptr))
+    { if (dnt->d_name[0] == '.') continue; // skip these files, incl . and ..
+      size += strlen(dnt->d_name)+1;
+      np++;
+    }    
+
+    rewinddir(dptr);
+
+    DB.dnames = (char **)malloc(np*sizeof(char*));
+    tbuf = (char*)malloc(size);
+
+    while(dnt = readdir(dptr))
+    { if (dnt->d_name[0] == '.') continue; // skip these files, incl . and ..
+      strcpy(tbuf,dnt->d_name);
+      DB.dnames[DB.n++] = tbuf;
+      tbuf += strlen(tbuf)+1;
+    }	
+    closedir(dptr);
+    return DB.n;
+}
+
+
+
 int main (int argc, char **argv)
 
   { int n,from,nq;
