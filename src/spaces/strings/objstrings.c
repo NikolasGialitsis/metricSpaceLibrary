@@ -22,13 +22,14 @@ static PalDB DB;
 #define db(p) (DB.ptrs[(int)p])
 
 Tdist distanceInter (Obj obj1, Obj obj2){
-  if(obj2 == 0) {
-    numDistances--;
-    return 1;
-  }
   Tdist dist = get_precomputed_distance_if_exists(obj1, obj2);
   if(dist >= 0) return dist;
-  ngg_construct(1, db(obj2));
+  if(obj2 != 0){
+    ngg_construct(1, db(obj2));
+  }
+  else{
+    ngg_construct(1,db(obj1));
+  }
   dist = ngg_dissimilarity(0,1);
   // printf("\n\nD(%.100s,%.100s)=%f\n",db(obj1),db(obj2),dist);
   uncache_graphs(1,1);
@@ -95,7 +96,7 @@ int openDB (char *name)
       printf("cereal took %f seconds to deserialize distance matrix\n", time_taken);    
     } else {
       printf("could not find objects file %s\n",objects_storage_file);    
-      exit(0);
+      // exit(0);
       time_t t;
       t = clock();
       printf("DB.npals %d\n",DB.npals);

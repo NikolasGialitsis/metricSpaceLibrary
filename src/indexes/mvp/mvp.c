@@ -228,8 +228,11 @@ int search (Index S, Obj obj, Tdist r, int show)
 static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
 
    { 
-     if (node->hoja)
-	{ searchbucketNN (node->u.hoja.bucket,node->u.hoja.size,obj,res);
+     if (node->hoja)//is leaf
+	{ 
+      // printf("leaf %d\n",node->u.interno.query);
+      // return;
+      searchbucketNN (node->u.hoja.bucket,node->u.hoja.size,obj,res);
 	}
      else
 	{ int i,ci,d;
@@ -239,13 +242,14 @@ static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
    
      dist = distance (obj, node->u.interno.query); 
      
-   //   printf("D(%d,%d)=%f\n",obj,node->u.interno.query,dist);
+   
      addCelem (res,node->u.interno.query,dist);
           for (ci=0;ci<arity;ci++)
              if (child(node,ci).dist > dist) break;
+         
           ci--; ea = eb = false;
           for (d=0;d<=arity;d++)
-              { i = ci-d;
+              { i = ci-d; 
                 if (i < 0) ea = true;
                 if (!ea)
                    { if ((i==arity-1) || (radCelem(res) == -1) ||
@@ -254,7 +258,7 @@ static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
                      else ea = true;
                    }
                 if (d==0) continue;
-		i = ci+d;
+                i = ci+d;
                 if (i >= arity) eb = true;
                 if (!eb)
                    { if ((radCelem(res) == -1) ||

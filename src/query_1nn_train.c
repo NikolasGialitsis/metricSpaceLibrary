@@ -3,6 +3,9 @@
 #include <sys/times.h>
 #include "obj.h"
 #include "index.h"
+#include <time.h>
+#include <unistd.h>
+
 typedef struct sPalDB
    { char *pals;  /* words all together */
      char **ptrs;  /* pointers to each word */
@@ -45,11 +48,24 @@ int main (int argc, char **argv) {
    numDistances = 0;
    bool fixed=false;
    int k = 1;
-
-   for (int i = 1 ; i < n+1 ; i++){
+   int numDeviations = 0;
+   double sumDeviations = 0;
+   double avgDeviations = 0;
+   time_t t;
+   t = clock();
+   int report_after_n_steps = 500;
+   for (int i = 1 ; i < n+1; i++){
       Obj qry;
       int siz;
-
+      if(i % report_after_n_steps == 0){
+         printf("computed %d distances\n",i);
+         fprintf(stderr,"Total distances per query: %f\n", numDistances/(float)numQueries);
+         fprintf(stderr,"Num Deviations: %d\n", numDeviations);
+         fprintf(stderr,"Sum Deviations: %f\n", sumDeviations);
+         if(sumDeviations > 0){
+            fprintf(stderr,"Avg Deviations: %f\n", numDeviations/(float)sumDeviations);
+         }
+      }
       qry = parseobj (queries[i]);
       numQueries++;
       if (fixed){
@@ -60,20 +76,29 @@ int main (int argc, char **argv) {
       } else { 
          times(&t1);
          r = searchNN (S,qry,k,false);
+         if(r > 0){
+            numDeviations++;
+            sumDeviations += r;
+            fprintf (stderr,"%d: dist = %f\n",i, r);  
+         }
          siz = k;
          times(&t2);
-         #ifdef CONT
-                     fprintf (stderr,"kNNs at distance %f\n",r);
-         #else
-                     fprintf (stderr,"kNNs at distance %f\n",r);
-         #endif
-         }
+        
       }
-     fprintf(stderr,"Total distances per query: %f\n",
-     numDistances/(float)numQueries);
-     fprintf (stderr,"freeing...\n");
-     freeIndex (S,true);
-     fprintf (stderr,"done\n");
-	   return 0;
    }
+   
+   t = clock() - t;
+   double time_taken = ((double)t)/CLOCKS_PER_SEC; 
+   fprintf(stderr,"Total distances per query: %f\n", numDistances/(float)numQueries);
+   fprintf(stderr,"Num Deviations: %d\n", numDeviations);
+   fprintf(stderr,"Sum Deviations: %f\n", sumDeviations);
+   if(sumDeviations > 0){
+      fprintf(stderr,"Avg Deviations: %f\n", numDeviations/(float)sumDeviations);
+   }
+   printf("Queried %d elements in %f seconds\n", n, time_taken);
+   fprintf (stderr,"freeing...\n");
+   freeIndex (S,true);
+   fprintf (stderr,"done\n");
+   return 0;
+ }
 

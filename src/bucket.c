@@ -44,6 +44,7 @@ void searchbucketNN (bucket B, int bsize, Obj obj, Tcelem *res)
      Tdist dist;
      for (i=0;i<bsize;i++)
 	 { dist = distance(B[i],obj);
+      // printf("\tdist = %f\n",dist);
 	   addCelem(res,B[i],dist);
 	 }
    }
