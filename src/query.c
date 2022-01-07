@@ -26,6 +26,7 @@ int main (int argc, char **argv)
      fprintf (stderr,"read %lli bytes\n",(long long)sdata.st_size);
 
      numDistances = 0;
+     
 
      while (true)
         { Obj qry;
@@ -46,12 +47,12 @@ int main (int argc, char **argv)
 #else
                if (sscanf (str,"%d",&r) == 0) break; // syntax error
 #endif
-	     }
+	         }
 	  if (getchar() != ',') break; // syntax error
 	  if (scanf ("%[^\n]s",str) == 0) break; // syntax error
 	  if (getchar() != '\n') break; // syntax error
-	  qry = parseobj (str);
-
+	  currVisitedLeaves = 0;
+     qry = parseobj (str);
           numQueries++;
           if (fixed)
 	     { times(&t1);
@@ -70,6 +71,7 @@ int main (int argc, char **argv)
                fprintf (stderr,"kNNs at distance %f\n",r);
 #endif
 	     }
+        fprintf("qry \"%s\" visited %d leaves in MVT\n",currVisitedLeaves);
 	}
      fprintf(stderr,"Total distances per query: %f\n",
      numDistances/(float)numQueries);

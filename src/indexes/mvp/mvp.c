@@ -232,6 +232,7 @@ static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
 	{ 
       // printf("leaf %d\n",node->u.interno.query);
       // return;
+      currVisitedLeaves++;
       searchbucketNN (node->u.hoja.bucket,node->u.hoja.size,obj,res);
 	}
      else
@@ -266,8 +267,9 @@ static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
                         _searchNN (&child(node,i).child,obj,res,arity);
                      else eb = true;
                    }
-              }
-	}
+              if(currVisitedLeaves > maxLeavesToVisit)return;
+            }
+	   }
    }
 
 Tdist searchNN (Index S, Obj obj, int k, bool show)

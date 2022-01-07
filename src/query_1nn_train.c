@@ -46,6 +46,7 @@ int main (int argc, char **argv) {
    fprintf (stderr,"read %lli bytes\n",(long long)sdata.st_size);
 
    numDistances = 0;
+   
    bool fixed=false;
    int k = 1;
    int numDeviations = 0;
@@ -55,6 +56,7 @@ int main (int argc, char **argv) {
    t = clock();
    int report_after_n_steps = 500;
    for (int i = 1 ; i < n+1; i++){
+      
       Obj qry;
       int siz;
       if(i % report_after_n_steps == 0){
@@ -67,6 +69,7 @@ int main (int argc, char **argv) {
          }
       }
       qry = parseobj (queries[i]);
+      currVisitedLeaves = 0;
       numQueries++;
       if (fixed){
          times(&t1);
@@ -85,6 +88,7 @@ int main (int argc, char **argv) {
          times(&t2);
         
       }
+      fprintf("query \"%s\" visited %d leaves in MVT\n",currVisitedLeaves);
    }
    
    t = clock() - t;
