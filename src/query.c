@@ -3,11 +3,13 @@
 #include <sys/times.h>
 #include "obj.h"
 #include "index.h"
+#include "basics.h"
 
 extern long long numDistances;
 int main (int argc, char **argv)
 
-   { char str[1024];
+   {
+     char str[1024];
      Index S;
      int k;
      Tdist r;
@@ -26,7 +28,7 @@ int main (int argc, char **argv)
      fprintf (stderr,"read %lli bytes\n",(long long)sdata.st_size);
 
      numDistances = 0;
-     
+     maxLeavesToVisit = 50;
 
      while (true)
         { Obj qry;
@@ -71,7 +73,7 @@ int main (int argc, char **argv)
                fprintf (stderr,"kNNs at distance %f\n",r);
 #endif
 	     }
-        fprintf("qry \"%s\" visited %d leaves in MVT\n",currVisitedLeaves);
+        fprintf(stderr,"qry \"%s\" visited %d leaves in MVT\n",str,currVisitedLeaves);
 	}
      fprintf(stderr,"Total distances per query: %f\n",
      numDistances/(float)numQueries);

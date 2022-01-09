@@ -86,21 +86,22 @@ int openDB (char *name)
         }
      DB.npals = dn;
 
-    
+    DistMat* DM;
     if(access( objects_storage_file, R_OK ) == 0) {
       time_t t;
       t = clock();
-      decerialize(objects_storage_file);
+      DM = decerialize(objects_storage_file);
+      
       t = clock() - t;
       double time_taken = ((double)t)/CLOCKS_PER_SEC;
       printf("cereal took %f seconds to deserialize distance matrix\n", time_taken);    
     } else {
       printf("could not find objects file %s\n",objects_storage_file);    
-      // exit(0);
+      printf("initiate new distance matrix computation:%s\n",objects_storage_file);    
       time_t t;
       t = clock();
       printf("DB.npals %d\n",DB.npals);
-      DistMat* DM = ngg_compute_distance_matrix(DB.ptrs+1,DB.npals);
+      DM = ngg_compute_distance_matrix(DB.ptrs+1,DB.npals);
       t = clock() - t;
       double time_taken = ((double)t)/CLOCKS_PER_SEC; 
       printf("distance matrix took %f seconds to build \n", time_taken);
@@ -110,6 +111,7 @@ int openDB (char *name)
       time_taken = ((double)t)/CLOCKS_PER_SEC;
       printf("cereal took %f seconds to serialize distance matrix\n", time_taken);  
     }
+    print_stats_distance_matrix(DM);
     return DB.npals;
    }
 

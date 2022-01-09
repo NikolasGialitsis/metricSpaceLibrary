@@ -5,7 +5,7 @@
 #include "index.h"
 #include <time.h>
 #include <unistd.h>
-
+#include "basics.h"
 typedef struct sPalDB
    { char *pals;  /* words all together */
      char **ptrs;  /* pointers to each word */
@@ -22,6 +22,8 @@ static PalDB DB;
 
 extern long long numDistances;
 int main (int argc, char **argv) { 
+   currVisitedLeaves = 0;
+   maxLeavesToVisit = 500;
    Index S;
    Tdist r;
    struct stat sdata;
@@ -51,7 +53,6 @@ int main (int argc, char **argv) {
    int k = 1;
    int numDeviations = 0;
    double sumDeviations = 0;
-   double avgDeviations = 0;
    time_t t;
    t = clock();
    int report_after_n_steps = 500;
@@ -88,7 +89,7 @@ int main (int argc, char **argv) {
          times(&t2);
         
       }
-      fprintf("query \"%s\" visited %d leaves in MVT\n",currVisitedLeaves);
+      fprintf(stderr, "query \"%d\" visited %d leaves in MVT found to find neighbor with distance  = %.2f\n",i,currVisitedLeaves,r);
    }
    
    t = clock() - t;

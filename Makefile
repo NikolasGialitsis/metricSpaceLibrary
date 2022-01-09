@@ -28,7 +28,7 @@ lib/buildC.o: src/build.c
 lib/queryC.o: src/query.c
 	 $(C) $(CFLAGS) -c -o lib/queryC.o src/query.c
 
-lib/queryExperimentA.o: src/query_1nn_train.c
+lib/queryExperimentA.o: src/query_1nn_train.c 
 	 $(C) $(CFLAGS) -c -o lib/queryExperimentA.o src/query_1nn_train.c
 
 # INDEXES
@@ -39,7 +39,7 @@ lib/indexC-mvp.o: src/indexes/mvp/mvp.c
 ######
 
 # SPACES
-lib/space-strings.o: src/spaces/strings/objstrings.c $(C_WRAPPER_FOLDER)/Request.c $(C_WRAPPER_FOLDER)/C_HandleGraphRequest.h $(C_WRAPPER_FOLDER)/libStringSplitter.so $(C_WRAPPER_FOLDER)/libProximityApproach.so $(C_WRAPPER_FOLDER)/libNGramGraph.so $(C_WRAPPER_FOLDER)/libGraphSimilarity.so
+lib/space-strings.o: src/spaces/strings/objstrings.c $(C_WRAPPER_FOLDER)/Request.c $(C_WRAPPER_FOLDER)/libStringSplitter.so $(C_WRAPPER_FOLDER)/libProximityApproach.so $(C_WRAPPER_FOLDER)/libNGramGraph.so $(C_WRAPPER_FOLDER)/libGraphSimilarity.so
 	 $(C) $(CFLAGS) -c -o lib/space-strings.o src/spaces/strings/objstrings.c  -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity
 
 # PROGRAMS

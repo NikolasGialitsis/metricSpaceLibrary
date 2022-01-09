@@ -14,7 +14,6 @@
 **/
 
 #include "mvp.h"
-
 void prnstats (Index S);
 
 int compar (const void *a, const void *b)
@@ -228,6 +227,7 @@ int search (Index S, Obj obj, Tdist r, int show)
 static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
 
    { 
+     if(currVisitedLeaves == maxLeavesToVisit)return;
      if (node->hoja)//is leaf
 	{ 
       // printf("leaf %d\n",node->u.interno.query);
@@ -267,7 +267,7 @@ static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
                         _searchNN (&child(node,i).child,obj,res,arity);
                      else eb = true;
                    }
-              if(currVisitedLeaves > maxLeavesToVisit)return;
+             
             }
 	   }
    }
