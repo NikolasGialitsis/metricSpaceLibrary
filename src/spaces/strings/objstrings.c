@@ -90,7 +90,7 @@ int openDB (char *name)
     if(access( objects_storage_file, R_OK ) == 0) {
       time_t t;
       t = clock();
-      DM = decerialize(objects_storage_file);
+      DM = decerialize(objects_storage_file, 0);
       
       t = clock() - t;
       double time_taken = ((double)t)/CLOCKS_PER_SEC;

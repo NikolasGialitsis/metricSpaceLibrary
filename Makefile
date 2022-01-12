@@ -1,11 +1,13 @@
 C_WRAPPER_FOLDER = /home/ngialitsis/search/NGramGraphParallel/c_wrapper
 C = gcc
 
-all:  all-strings all-experiments
+all:  all-strings all-experiments stats
 
 all-strings:  bin/build-mvp-strings bin/query-mvp-strings
 
 all-experiments: bin/query-experiment-a
+
+stats: bin/stats
 
 clean: 
 	rm -f bin/* lib/*.o lib/*/*.o lib/*/*/*.o
@@ -31,6 +33,9 @@ lib/queryC.o: src/query.c
 lib/queryExperimentA.o: src/query_1nn_train.c 
 	 $(C) $(CFLAGS) -c -o lib/queryExperimentA.o src/query_1nn_train.c
 
+lib/stats.o: src/distance_matrix_stats.c 
+	 $(C) $(CFLAGS) -c -o lib/stats.o src/distance_matrix_stats.c
+
 # INDEXES
 
 lib/indexC-mvp.o: src/indexes/mvp/mvp.c
@@ -52,3 +57,7 @@ bin/query-mvp-strings: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-st
 
 bin/query-experiment-a: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o lib/queryExperimentA.o
 	$(C) $(CFLAGS) -o bin/query-experiment-a lib/queryExperimentA.o  lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 
+
+
+bin/stats: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o lib/stats.o
+	$(C) $(CFLAGS) -o bin/stats lib/stats.o  lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 

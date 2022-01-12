@@ -59,24 +59,15 @@ int main (int argc, char **argv) {
    double sumDeviations = 0;
    time_t t;
    t = clock();
-   int report_after_n_steps = 500;
+   maxLeavesToVisit = 50;
+   
    for (int i = 1 ; i < dn+1; i++){
       
       Obj qry;
       int siz;
-      if(i % report_after_n_steps == 0){
-         printf("computed %d distances\n",i);
-         fprintf(stderr,"Total distances per query: %f\n", numDistances/(float)numQueries);
-         fprintf(stderr,"Num Deviations: %d\n", numDeviations);
-         fprintf(stderr,"Sum Deviations: %f\n", sumDeviations);
-         if(sumDeviations > 0){
-            fprintf(stderr,"Avg Deviations: %f\n", numDeviations/(float)sumDeviations);
-         }
-      }
-     
       qry = parseobj (queries[i]);
       currVisitedLeaves = 0;
-      maxLeavesToVisit = 50;
+      numDistances = 0;
       numQueries++;
       if (fixed){
          times(&t1);
@@ -85,6 +76,7 @@ int main (int argc, char **argv) {
          fprintf (stderr,"%i objects found\n",siz);
       } else { 
          times(&t1);
+         fprintf(stderr,"%s\n", queries[i]);
          r = searchNN (S,qry,k,true);
          if(r > 0){
             numDeviations++;
@@ -93,8 +85,7 @@ int main (int argc, char **argv) {
          
          siz = k;
          times(&t2);
-         fprintf(stderr,"query %s\n", queries[i]);
-         fprintf (stderr,"kNNs at distance %f\n",r);
+         fprintf (stderr,"kNNs found at distance %f , visited %d/%d leaves, computed %ld distances\n\n",r,currVisitedLeaves,maxLeavesToVisit,numDistances);
         
       }
    }
