@@ -20,10 +20,11 @@ static PalDB DB;
 #define db(p) (DB.ptrs[(int)p])
 
 
+
+
 extern long long numDistances;
 int main (int argc, char **argv) { 
-   currVisitedLeaves = 0;
-   maxLeavesToVisit = 500;
+
    Index S;
    Tdist r;
    struct stat sdata;
@@ -36,14 +37,17 @@ int main (int argc, char **argv) {
    exit(1);
    }
    char* finame = argv[2];
-   fprintf (stderr,"Openning: %s\n",finame);
-   int n = openDB(finame);
-   char** queries = getQueriesFromDB();
-   fprintf (stderr,"querying %d elements...\n",n);
-
-
+  
    fprintf (stderr,"reading index...\n");
    S = loadIndex ( argv[1]);
+   int dn = getCountDB();
+
+   fprintf (stderr,"Openning: %s\n",finame);
+
+   char** queries = getQueriesFromDB(finame);
+  
+   fprintf (stderr,"querying %d elements...\n",dn);
+
    stat (argv[1],&sdata);
    fprintf (stderr,"read %lli bytes\n",(long long)sdata.st_size);
 
@@ -56,7 +60,7 @@ int main (int argc, char **argv) {
    time_t t;
    t = clock();
    int report_after_n_steps = 500;
-   for (int i = 1 ; i < n+1; i++){
+   for (int i = 1 ; i < dn+1; i++){
       
       Obj qry;
       int siz;
@@ -69,8 +73,10 @@ int main (int argc, char **argv) {
             fprintf(stderr,"Avg Deviations: %f\n", numDeviations/(float)sumDeviations);
          }
       }
+     
       qry = parseobj (queries[i]);
       currVisitedLeaves = 0;
+      maxLeavesToVisit = 50;
       numQueries++;
       if (fixed){
          times(&t1);
@@ -79,17 +85,18 @@ int main (int argc, char **argv) {
          fprintf (stderr,"%i objects found\n",siz);
       } else { 
          times(&t1);
-         r = searchNN (S,qry,k,false);
+         r = searchNN (S,qry,k,true);
          if(r > 0){
             numDeviations++;
             sumDeviations += r;
-            fprintf (stderr,"%d: dist = %f\n",i, r);  
          }
+         
          siz = k;
          times(&t2);
+         fprintf(stderr,"query %s\n", queries[i]);
+         fprintf (stderr,"kNNs at distance %f\n",r);
         
       }
-      fprintf(stderr, "query \"%d\" visited %d leaves in MVT found to find neighbor with distance  = %.2f\n",i,currVisitedLeaves,r);
    }
    
    t = clock() - t;
@@ -100,7 +107,7 @@ int main (int argc, char **argv) {
    if(sumDeviations > 0){
       fprintf(stderr,"Avg Deviations: %f\n", numDeviations/(float)sumDeviations);
    }
-   printf("Queried %d elements in %f seconds\n", n, time_taken);
+   printf("Queried %d elements in %f seconds\n", dn, time_taken);
    fprintf (stderr,"freeing...\n");
    freeIndex (S,true);
    fprintf (stderr,"done\n");

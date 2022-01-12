@@ -19,8 +19,8 @@ int openDB (char *name);
 
 /*todo: add documentation
 */
-char** getQueriesFromDB ();
-
+char** getQueriesFromDB (const char* dbname);
+int getCountDB();
 
 	/* frees the currently open DB, if any */
 void closeDB (void);

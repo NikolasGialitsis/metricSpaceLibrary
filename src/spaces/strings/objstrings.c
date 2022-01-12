@@ -115,9 +115,38 @@ int openDB (char *name)
     return DB.npals;
    }
 
-char** getQueriesFromDB()
+
+int getCountDB()
 {
-    return DB.ptrs;
+   return DB.npals;
+}
+
+char** getQueriesFromDB(const char* dbname)
+{
+   char *ptr,*top;
+   FILE *f;
+   struct stat sdata;
+   unsigned long dn;
+
+     f = fopen (dbname,"r");
+     stat (dbname,&sdata);
+     char* pals = malloc (sdata.st_size);
+     fread (pals,sdata.st_size,1,f);
+     fclose (f);
+     ptr = pals; top = ptr + sdata.st_size; 
+     dn = 0;
+     while (ptr < top) //count newlines (num of input sequences)
+	{ while (*ptr != '\n') ptr++;
+	  dn++; *ptr++ = 0;//change newline to string termination character
+	}
+     char** queries = malloc ((dn+1)*sizeof(char*)); //storage for one additional ptr in DB
+     dn = 0; ptr = pals; 
+     queries[0] = NULL; //notice: skip extra ptr
+     while (ptr < top)//Add ptrs to start of sequences to DB 
+	{ queries[++dn] = ptr;
+	  while (*ptr++);
+  }
+  return queries;
 }
 
 void closeDB (void)
