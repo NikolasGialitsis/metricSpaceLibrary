@@ -32,18 +32,23 @@ int main (int argc, char **argv) {
    int numQueries = 0;
 
 
-   if (argc < 3)
-   { fprintf (stderr,"Usage: %s idxfile queriesfile\n",argv[0]);
+   if (argc < 4)
+   { fprintf (stderr,"Usage: %s idxfile queriesfile output_file\n",argv[0]);
    exit(1);
    }
+   FILE* fpt = fopen(argv[3], "w+");
+   fprintf(fpt,"id,BestDistance,visitedLeaves,numDistances\n");
+   fprintf (fpt,"%s idxfile queriesfile output_file\n",argv[0]);
+   fprintf(fpt,"%s,%s,%s,%s\n",argv[0],argv[1],argv[2],argv[3]);
+   
    char* finame = argv[2];
   
    fprintf (stderr,"reading index...\n");
    S = loadIndex ( argv[1]);
    int dn = getCountDB();
+   fprintf(fpt,"%d\n", dn);
 
    fprintf (stderr,"Openning: %s\n",finame);
-
    char** queries = getQueriesFromDB(finame);
   
    fprintf (stderr,"querying %d elements...\n",dn);
@@ -52,15 +57,12 @@ int main (int argc, char **argv) {
    fprintf (stderr,"read %lli bytes\n",(long long)sdata.st_size);
 
    numDistances = 0;
-   
+   long long totalDistances = 0;
    bool fixed=false;
    int k = 1;
-   int numDeviations = 0;
-   double sumDeviations = 0;
    time_t t;
    t = clock();
-   maxLeavesToVisit = 1;
-   
+   maxLeavesToVisit = 50;
    for (int i = 1 ; i < dn+1; i++){
       
       Obj qry;
@@ -78,30 +80,24 @@ int main (int argc, char **argv) {
          times(&t1);
          fprintf(stderr,"%s\n", queries[i]);
          r = searchNN (S,qry,k,true);
-         if(r > 0){
-            numDeviations++;
-            sumDeviations += r;
-         }
-         
          siz = k;
          times(&t2);
          fprintf (stderr,"kNNs found at distance %f , visited %d/%d leaves, computed %ld distances\n\n",r,currVisitedLeaves,maxLeavesToVisit,numDistances);
-        
+         fprintf(fpt,"%d,%f,%d,%ld\n",i, r, currVisitedLeaves, numDistances);
       }
+      totalDistances += numDistances;
    }
+   
    
    t = clock() - t;
    double time_taken = ((double)t)/CLOCKS_PER_SEC; 
-   fprintf(stderr,"Total distances per query: %f\n", numDistances/(float)numQueries);
-   fprintf(stderr,"Num Deviations: %d\n", numDeviations);
-   fprintf(stderr,"Sum Deviations: %f\n", sumDeviations);
-   if(sumDeviations > 0){
-      fprintf(stderr,"Avg Deviations: %f\n", numDeviations/(float)sumDeviations);
-   }
-   printf("Queried %d elements in %f seconds\n", dn, time_taken);
+   fprintf(fpt,"Total Distances: %ld\n", totalDistances);
+   fprintf(fpt,"Average distance per query: %f\n", totalDistances/(float)numQueries);
+   fprintf(fpt, "Queried %d elements in %f seconds\n", numQueries, time_taken);
    fprintf (stderr,"freeing...\n");
    freeIndex (S,true);
    fprintf (stderr,"done\n");
+   fclose(fpt);
    return 0;
  }
 

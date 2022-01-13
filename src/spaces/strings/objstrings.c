@@ -115,10 +115,14 @@ int openDB (char *name)
     return DB.npals;
    }
 
-
 int getCountDB()
 {
    return DB.npals;
+}
+
+char** getStringsFromDB()
+{
+   return DB.ptrs;
 }
 
 char** getQueriesFromDB(const char* dbname)
