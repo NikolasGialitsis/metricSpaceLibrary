@@ -59,7 +59,7 @@ int main (int argc, char **argv) {
    double sumDeviations = 0;
    time_t t;
    t = clock();
-   maxLeavesToVisit = 50;
+   maxLeavesToVisit = 1;
    
    for (int i = 1 ; i < dn+1; i++){
       

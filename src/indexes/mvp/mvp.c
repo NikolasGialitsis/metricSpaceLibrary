@@ -252,21 +252,22 @@ static void _searchNN (vpnode *node, Obj obj, Tcelem *res, int arity)
           for (d=0;d<=arity;d++)
               { i = ci-d; 
                 if (i < 0) ea = true;
-                if (!ea)
-                   { if ((i==arity-1) || (radCelem(res) == -1) ||
-			 (dist-child(node,i+1).dist <= radCelem(res)))
-                       _searchNN (&child(node,i).child,obj,res,arity);
-                     else ea = true;
-                   }
+                if (!ea) { if ((i==arity-1) || (radCelem(res) == -1) ||	 (dist-child(node,i+1).dist <= radCelem(res))){
+                   _searchNN (&child(node,i).child,obj,res,arity);
+                    if(currVisitedLeaves == maxLeavesToVisit)return;
+                } else ea = true;
+               }
                 if (d==0) continue;
                 i = ci+d;
                 if (i >= arity) eb = true;
                 if (!eb)
                    { if ((radCelem(res) == -1) ||
-			 (child(node,i).dist-dist <= radCelem(res)))
+			 (child(node,i).dist-dist <= radCelem(res))){
                         _searchNN (&child(node,i).child,obj,res,arity);
-                     else eb = true;
-                   }
+                        if(currVisitedLeaves == maxLeavesToVisit)return;
+                  }  else eb = true;
+                  
+               }
              
             }
 	   }
