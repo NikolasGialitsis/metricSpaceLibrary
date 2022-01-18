@@ -1,12 +1,13 @@
 
 #include "../../obj.h"
-
+#include "../../basics.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
 #include "/home/ngialitsis/search/NGramGraphParallel/c_wrapper/C_Interface.h"
 #include <time.h>
 #include <unistd.h>
+
 
 typedef struct sPalDB
    { char *pals;  /* words all together */
@@ -20,10 +21,13 @@ static int never = 1;
 static PalDB DB;
 
 #define db(p) (DB.ptrs[(int)p])
-
+extern long long numPrecomputedDistances;
 Tdist distanceInter (Obj obj1, Obj obj2){
   Tdist dist = get_precomputed_distance_if_exists(obj1, obj2);
-  if(dist >= 0) return dist;
+  if(dist >= 0) {
+    numPrecomputedDistances++;
+    return dist;
+  }
   if(obj2 != 0){
     ngg_construct(1, db(obj2));
   }

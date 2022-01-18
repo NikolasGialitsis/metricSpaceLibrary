@@ -39,6 +39,7 @@ typedef int Tdist;
 
 	/* global counter of distance computations */
 long long numDistances;
+long long numPrecomputedDistances;
 int currVisitedLeaves;
 int maxLeavesToVisit;
 

@@ -5,7 +5,7 @@ all:  all-strings all-experiments stats
 
 all-strings:  bin/build-mvp-strings bin/query-mvp-strings
 
-all-experiments: bin/query-experiment-a
+all-experiments: bin/noisy_distances bin/query-experiment-a
 
 stats: bin/stats
 
@@ -36,6 +36,10 @@ lib/queryExperimentA.o: src/query_1nn_train.c
 lib/stats.o: src/distance_matrix_stats.c 
 	 $(C) $(CFLAGS) -c -o lib/stats.o src/distance_matrix_stats.c
 
+lib/noisy_distances.o: src/compute_noisy_nn_distances.c 
+	$(C) $(CFLAGS) -c -o lib/noisy_distances.o src/compute_noisy_nn_distances.c
+
+
 # INDEXES
 
 lib/indexC-mvp.o: src/indexes/mvp/mvp.c
@@ -61,3 +65,6 @@ bin/query-experiment-a: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-s
 
 bin/stats: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o lib/stats.o
 	$(C) $(CFLAGS) -o bin/stats lib/stats.o  lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 
+
+bin/noisy_distances: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o lib/noisy_distances.o
+	$(C) $(CFLAGS) -o bin/noisy_distances lib/noisy_distances.o  lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 
