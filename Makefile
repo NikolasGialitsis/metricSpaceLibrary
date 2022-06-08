@@ -5,7 +5,7 @@ all:  all-strings all-experiments stats
 
 all-strings:  bin/build-mvp-strings bin/query-mvp-strings
 
-all-experiments: bin/noisy_distances bin/query-experiment-a bin/retrieval_error bin/trigen
+all-experiments: bin/noisy_distances bin/query-experiment-a bin/retrieval_error bin/trigen bin/estimate_metricity
 
 stats: bin/stats
 
@@ -45,6 +45,9 @@ lib/retrieval_error.o: src/compute_noisy_retrieval_error.c
 lib/trigen.o: src/trigen.c 
 	$(C) $(CFLAGS) -c -o lib/trigen.o src/trigen.c
 
+lib/estimate_metricity.o: src/estimate_metricity.c 
+	$(C) $(CFLAGS) -c -o lib/estimate_metricity.o src/estimate_metricity.c
+
 
 # INDEXES
 
@@ -80,3 +83,6 @@ bin/retrieval_error: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-stri
 
 bin/trigen: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o lib/trigen.o
 	$(C) $(CFLAGS) -o bin/trigen lib/trigen.o  lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 
+
+bin/estimate_metricity: lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o lib/estimate_metricity.o
+	$(C) $(CFLAGS) -o bin/estimate_metricity lib/estimate_metricity.o  lib/basicsC.o lib/bucketC.o lib/indexC-mvp.o lib/space-strings.o -L$(C_WRAPPER_FOLDER) -lC_Interface  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity  -lStringSplitter -lNGramGraph -lProximityApproach -lGraphSimilarity -lm 	

@@ -38,7 +38,7 @@ unsigned long long int n_combinations_without_replacement(int n, int k){
 triplet* generate_triplets(int* elements, int sample_size){
     unsigned long long int n_triplets = n_combinations_without_replacement(sample_size, 3);
     assert(n_triplets >= sample_size);
-    fprintf(stderr, "%llu triplets\n", n_triplets);
+    // fprintf(stderr, "%llu triplets\n", n_triplets);
     triplet* triplets = malloc(sizeof(triplet)*n_triplets);
     unsigned long long  int num_triplets = 0;
     for(int i = 0 ; i < sample_size; i++){
@@ -93,7 +93,7 @@ int is_euclidean(int x, int y, int z, double w){
     return 1;
 }
 
-double triangle_error(char** objs, triplet* sample, int n_triplets, double w){
+double get_non_triangles(char** objs, triplet* sample, int n_triplets, double w){
     
     double T_error = 0; 
     int nontriangles = 0;
@@ -102,9 +102,10 @@ double triangle_error(char** objs, triplet* sample, int n_triplets, double w){
             nontriangles++;
         }
     }
+    // fprintf(stderr, "nontriangles : %d\n",nontriangles);
     T_error = (nontriangles*1.0)/n_triplets;
-    fprintf(stderr, "w: %f T-error: %f\n",w, T_error);
-    return T_error;
+    // fprintf(stderr, "w: %f T-error: %f\n",w, T_error);
+    return nontriangles;
     
 }
 
@@ -123,54 +124,32 @@ int main (int argc, char **argv) {
     int sample_size = 500;
     int w = 0;
     double theta = 0.02;
-    int n_iter = 0;
-    int seed = 2022;
-  
+    int n_iter = 1000;
 
-    int* random_indices = get_random_sample_indices(dn, sample_size, seed);
-    triplet* sample = generate_triplets(random_indices, sample_size);
+    int* range = malloc(sizeof(int)*50000);
+    for (int i = 0; i < 50000; i++)
+    {  
+        range[i] = i;
+    } 
+    int seed_of_seeds = 777;
+    int* seeds = get_random_sample_indices(50000, n_iter, seed_of_seeds);
 
-  
-    int nontriangles = 0;
-    unsigned long long int n_triplets = n_combinations_without_replacement(sample_size, 3);
-    double error = triangle_error(dbitems, sample, n_triplets, w);
-
-
-    if(error < theta)
-        w = -1;
-    else
-        w = 1;
-    double best_w  = w;
-    double max_error = error;
-
-
-    while( error < theta){
-        n_iter +=1;
-        max_error = error;
-        best_w = w;
-        w*=2;
-        error = triangle_error(dbitems, sample, n_triplets, w); 
+    for (int i = 0; i < n_iter; i++)
+    {   
+        fprintf(stderr, "iteration %d\n",i);
+        int* random_indices = get_random_sample_indices(dn, sample_size, seeds[i]);
+        triplet* sample = generate_triplets(random_indices, sample_size);
+        
+        unsigned long long int n_triplets = n_combinations_without_replacement(sample_size, 3);
+        int nontriangles = get_non_triangles(dbitems, sample, n_triplets, w);
+        // fprintf(stderr, "iteration %d triangle error %.2f",i,error);
+        free(sample);
+        free(random_indices);
+        if (nontriangles > 0){
+            fprintf(stderr, "is not metric\n");
+            return 0;
+        }
     }
-    
-    fprintf(stderr, "best w  = %.2f, error = %.4f after %d iterations\n",best_w, max_error, n_iter-1);
-    w = best_w+1;
-    error = max_error;
-    if(w > 0 ) w++;
-    else w--;
-    
-    while(error < theta){
-        best_w  = w;
-        error = triangle_error(dbitems, sample, n_triplets, w);
-        max_error = error;
-        if(w > 0 ) w++;
-        else w--;
-        n_iter++;
-    }
-
-
-    fprintf(stderr, "best w  = %.2f, error = %.4f after %d iterations\n",best_w, max_error, n_iter-1);
-    free(sample);
-    free(random_indices);
-
+    fprintf(stderr, "is metric\n");
  }
 
